@@ -1,1 +1,1 @@
-Source this in your shell and save your keyboard!
+Source this in your shell and save your keyboard and fingers!
