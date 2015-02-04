@@ -1,0 +1,39 @@
+#!/bin/bash
+_vagrant() 
+{
+   local cur prev opts base
+   COMPREPLY=()
+   cur="${COMP_WORDS[COMP_CWORD]}"
+   prev="${COMP_WORDS[COMP_CWORD-1]}"
+   action="${COMP_WORDS[1]}"
+
+   #
+   #  The basic options we'll complete.
+   #
+   opts="-v -h box destroy halt help hostmanager init package plugin provision reload resume ssh ssh-config status suspend up"
+
+
+   #
+   #  Complete the arguments to some of the basic commands.
+   #
+   case "${action}" in
+	ssh|ssh-config|destroy|hostmanager)
+            if [ "${prev}" == "${action}" ]; then
+	        local running=$(echo .vagrant/machines/* | sed 's#.vagrant/machines/##g' )
+	        COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            fi
+            return 0
+            ;;
+        up|status|provision|destroy)
+            local running=$(echo .vagrant/machines/* | sed 's#.vagrant/machines/##g' )
+            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+            ;;
+   esac
+
+  COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+  return 0
+}
+complete -F _vagrant vagrant
